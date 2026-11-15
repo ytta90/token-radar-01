@@ -1,0 +1,127 @@
+/* Token Radar's scope theme. The subject is a radar: a dark green-black scope, one signal color
+   (amber) for what the radar found, green only for a number that went up. The amber is the one
+   bold element; everything else stays quiet so the board reads first. */
+:root {
+  --canvas: #0d1512;
+  --surface: #15211b;
+  --surface-2: #1b2a22;
+  --ink: #edf3ee;
+  --muted: #8fa398;
+  --border: #243329;
+  --signal: #f5b544;
+  --signal-dim: rgba(245, 181, 68, 0.16);
+  --gain: #3ecf8e;
+  --negative: #ff7a6b;
+  --radius-control: 8px;
+  --radius-panel: 14px;
+  --font-body: system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-num: ui-monospace, "SF Mono", Menlo, monospace;
+  --s1: 4px; --s2: 8px; --s3: 12px; --s4: 16px; --s5: 24px; --s6: 32px; --s7: 48px;
+}
+* { box-sizing: border-box; }
+html { color-scheme: dark; }
+body { margin: 0; background: var(--canvas); color: var(--ink); font: 400 15px/1.5 var(--font-body); text-wrap: pretty; }
+h1, h2, h3 { margin: 0; letter-spacing: -0.02em; text-wrap: balance; }
+h1 { font-size: 30px; line-height: 1.15; font-weight: 650; }
+h2 { font-size: 19px; line-height: 1.2; font-weight: 650; }
+h3 { font-size: 15px; line-height: 1.25; font-weight: 650; }
+p { margin: 0; }
+button, input, select { font: inherit; color: inherit; }
+button { cursor: pointer; }
+a { color: var(--signal); }
+.skip { position: absolute; left: -9999px; top: 0; padding: var(--s2) var(--s4); background: var(--surface); border: 1px solid var(--border); z-index: 20; }
+.skip:focus { left: var(--s4); top: var(--s4); }
+:focus-visible { outline: 2px solid var(--signal); outline-offset: 2px; }
+.noscript { padding: var(--s5); color: var(--muted); }
+
+.shell { max-width: 1360px; margin: 0 auto; padding: var(--s5) var(--s6) var(--s7); }
+.top { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--s5); padding-bottom: var(--s4); border-bottom: 1px solid var(--border); }
+.brand { display: flex; align-items: center; gap: var(--s3); }
+/* The scope: a ring with one amber sweep wedge, the radar's signal. Static: the screenshots are stills. */
+.mark { width: 22px; height: 22px; border-radius: 50%; flex: none; border: 1px solid var(--border); background: conic-gradient(from 210deg, var(--signal) 0deg, rgba(245, 181, 68, 0.25) 70deg, transparent 110deg), radial-gradient(circle at 50% 50%, transparent 58%, rgba(245, 181, 68, 0.12) 59%, transparent 60%); }
+.brand-name { font-family: var(--font-num); font-size: 13px; letter-spacing: 0.04em; color: var(--muted); }
+.top-meta { display: flex; flex-wrap: wrap; gap: var(--s3); justify-content: flex-end; color: var(--muted); font-size: 13px; }
+.top-meta span { white-space: nowrap; }
+.lede { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.65fr); gap: var(--s6); padding: var(--s6) 0 var(--s5); }
+.lede p { color: var(--muted); max-width: 62ch; margin-top: var(--s2); }
+.facts { display: grid; gap: var(--s2); align-content: start; border-left: 1px solid var(--border); padding-left: var(--s5); }
+.fact { display: flex; align-items: baseline; justify-content: space-between; gap: var(--s3); }
+.fact b { font-family: var(--font-num); font-size: 15px; font-weight: 550; }
+.fact span { color: var(--muted); font-size: 13px; }
+
+.controls { display: flex; flex-wrap: wrap; align-items: end; gap: var(--s3); padding: var(--s4) 0; border-top: 1px solid var(--border); }
+.field { display: grid; gap: var(--s1); }
+.field label, .field .sub { color: var(--muted); font-size: 12px; }
+.field input, .field select { min-height: 36px; padding: 0 var(--s3); border: 1px solid var(--border); border-radius: var(--radius-control); background: var(--surface-2); min-width: 170px; }
+.field input { min-width: 260px; }
+.tabs { display: flex; gap: var(--s1); padding: 3px; border: 1px solid var(--border); border-radius: var(--radius-control); background: var(--surface-2); }
+.tabs button { min-height: 30px; padding: 0 var(--s3); border: 0; border-radius: 6px; background: transparent; color: var(--muted); }
+.tabs button[aria-pressed="true"] { background: var(--signal); color: #1a1405; font-weight: 600; }
+.check { display: flex; align-items: center; gap: var(--s2); min-height: 36px; color: var(--muted); font-size: 13px; cursor: pointer; }
+.check input { accent-color: var(--signal); width: 16px; height: 16px; }
+.count { margin-left: auto; color: var(--muted); font-size: 13px; align-self: center; }
+
+.panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-panel); overflow: hidden; }
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+th, td { padding: var(--s3); border-bottom: 1px solid var(--border); text-align: left; vertical-align: middle; }
+th { color: var(--muted); font-size: 12px; font-weight: 500; white-space: nowrap; }
+th button { display: inline-flex; align-items: center; gap: var(--s1); border: 0; background: none; padding: 0; color: inherit; font: inherit; }
+th button:hover { color: var(--ink); }
+tbody tr { cursor: pointer; }
+tbody tr:hover { background: var(--surface-2); }
+tbody tr[data-selected="true"] { background: rgba(245, 181, 68, 0.08); }
+.num { font-family: var(--font-num); font-variant-numeric: tabular-nums; white-space: nowrap; }
+/* Rank is the radar's signal: the only amber number in the row. */
+.rank { color: var(--signal); font-weight: 600; }
+.name { display: grid; gap: 2px; }
+.name b { font-weight: 600; }
+.sub { color: var(--muted); font-size: 12px; }
+.pos { color: var(--gain); }
+.neg { color: var(--negative); }
+.bar { width: 110px; height: 6px; border-radius: 3px; background: var(--border); overflow: hidden; }
+.bar i { display: block; height: 100%; background: var(--signal); }
+.implied { display: flex; align-items: center; gap: var(--s2); }
+.badge { display: inline-block; margin-left: 6px; padding: 1px 7px; border-radius: 999px; background: var(--signal-dim); color: var(--signal); font-size: 11px; font-weight: 600; letter-spacing: 0.02em; vertical-align: 1px; }
+.status { display: inline-flex; align-items: center; gap: 6px; color: var(--muted); font-size: 12px; white-space: nowrap; }
+.status::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--signal); }
+.status.live::before { background: var(--gain); }
+
+.model { margin-top: var(--s4); padding: var(--s5); display: grid; gap: var(--s3); }
+.formula { font-family: var(--font-num); font-size: 13px; line-height: 1.7; color: var(--muted); overflow-wrap: anywhere; }
+.sandbox { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: var(--s3); }
+.sandbox .field input { min-width: 0; width: 100%; }
+.sandbox-note { color: var(--muted); font-size: 12px; }
+.button { min-height: 36px; padding: 0 var(--s4); border: 1px solid var(--border); border-radius: var(--radius-control); background: var(--surface-2); }
+.button.primary { background: var(--signal); border-color: var(--signal); color: #1a1405; font-weight: 600; }
+.empty { padding: var(--s7) var(--s5); text-align: center; display: grid; gap: var(--s3); justify-items: center; }
+.empty p { color: var(--muted); }
+
+.detail { position: fixed; top: 0; right: 0; bottom: 0; width: min(560px, 94vw); z-index: 10; background: var(--surface); border: 0; border-left: 1px solid var(--border); padding: var(--s5); overflow-y: auto; color: var(--ink); }
+.detail::backdrop { background: rgba(4, 8, 6, 0.6); }
+.detail-head { display: flex; align-items: start; justify-content: space-between; gap: var(--s4); }
+.detail-head > div { min-width: 0; }
+.close { flex: none; min-height: 32px; padding: 0 var(--s2); white-space: nowrap; border: 1px solid var(--border); border-radius: var(--radius-control); background: var(--surface-2); }
+.detail h2 { margin-top: var(--s1); }
+.detail .sub { margin-top: var(--s1); }
+.detail-section { margin-top: var(--s5); padding-top: var(--s4); border-top: 1px solid var(--border); }
+.detail-section h3 { margin-bottom: var(--s2); }
+.equation { display: grid; gap: var(--s2); font-family: var(--font-num); font-size: 13px; }
+.equation div { display: flex; justify-content: space-between; gap: var(--s3); }
+.equation span { color: var(--muted); }
+.equation .total { border-top: 1px solid var(--border); padding-top: var(--s2); }
+.equation .total b { color: var(--signal); }
+.steps { margin: 0; padding-left: var(--s5); display: grid; gap: var(--s3); }
+.steps li { padding-left: var(--s1); }
+.steps b { display: block; font-weight: 500; }
+.cost { color: var(--muted); font-size: 12px; font-family: var(--font-num); }
+
+@media (max-width: 900px) {
+  .shell { padding: var(--s4); }
+  .lede { grid-template-columns: 1fr; gap: var(--s4); }
+  .facts { border-left: 0; border-top: 1px solid var(--border); padding-left: 0; padding-top: var(--s4); }
+  .field input { min-width: 0; width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+}
