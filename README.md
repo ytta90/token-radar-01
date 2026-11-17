@@ -1,39 +1,45 @@
-# token-radar
+# Token Radar — which pre-token protocol launches next
 
-[![make.fun · token-radar-01](https://make.fun/badge/token-radar-01.svg)](https://make.fun/bounty/token-radar-01?utm_source=github&utm_medium=readme&utm_campaign=token-radar-01)
+A ranked board of the pre-token protocols in a sealed DefiLlama snapshot,
+scored by the value a token would imply from the snapshot's own figures.
 
-Token Radar ranks pre-token protocols by an implied value computed from a frozen DefiLlama snapshot, and shows a reader how to farm each one. The board covers all 40 watchlist protocols and adds every other pre-token protocol that meets the field guide's definition, strongest first. Live-token protocols are set aside with their market caps, never mixed into the ranking.
+## The model (radar-3)
 
-## How it ranks
+Implied value = TVL × category multiple × growth × maturity.
 
-Implied value is one function of the snapshot figures, the same for every protocol:
+- **Category multiple**: the median market-cap / TVL of the token-bearing
+  protocols in the same category, shrunk toward the global median (k = 4) so a
+  thin category cannot set the price alone. Categories with fewer than three
+  comparables use the global median. The multiples are computed from the
+  snapshot at build time, never typed in.
+- **Growth**: the 7-day change, clamped to −50% … +100%, weighted 0.6×.
+- **Maturity**: 0.6 for a new protocol, rising to 1.0 at three years.
+- **Cap**: the implied value never exceeds three times TVL.
 
-```
-implied = round(TVL x 0.25 x growth x maturity x chains)
-growth   = 1 + clamp(change_7d, -60, 120) / 100 x 0.5
-maturity = 0.6 + min(age_days, 1095) / 1095 x 0.4
-chains   = 1 + 0.02 x min(chains - 1, 10)
-```
-
-TVL is the size of the economy that would back a token. Seven-day growth is momentum. Maturity is how long the protocol has run with no token. Chains is reach: more chains means a wider holder base for the eventual token, at most a 20% premium. No protocol name is special-cased. A protocol ranks only if it records no token and is not a wrapped, staked, or bridged product of a token that already trades, per the field guide's own rule.
-
-Each row carries an eight-step farm plan with what it costs and how long it takes, derived from the protocol's category, chains, TVL, and age. The dashboard also has a model sandbox: change a constant and the board re-ranks at once with the same function.
+The board ranks every rankable pre-token protocol: the 40-protocol watchlist
+plus every other protocol that is pre-token, not an exchange, not a versioned
+pool, and not a wrapped, staked or bridged product of a token that already
+trades. Protocols whose token already trades are shown apart, by market cap.
 
 ## Run it
 
 ```sh
-mkdir -p out && MAKEFUN_OUTPUT_DIR=out node main.ts --input /path/to/snapshot.json
+node main.ts --input <snapshot.json> [--out <dir>]
 ```
 
-The program reads the snapshot, writes the ranked board to `out/board.json`, the dashboard's data to `out/data.js`, copies `dashboard/` and `screenshots/` to `out/`, and writes `out/dossier.json`.
+Writes `board.json`, `data.js`, the dashboard, the screenshots and
+`dossier.json` (last) into the output directory. Exits 0 when the board
+passes its own checks, 1 when it does not.
 
-## Outputs
+## Files
 
-- `board.json`: the ranked board, one row per pre-token protocol with its implied value, model breakdown, and farm plan.
-- `data.js`: the dashboard's dataset, as one script the page reads with no network.
-- `dashboard/`: the static page: board, detail view, filtered view, live-token view, and model sandbox.
-- `dossier.json`: the dossier the judge reads, built with the vendored make.fun library.
+- `main.ts` — the runner: snapshot in, finished entry out.
+- `lib/model.ts` — the radar-3 model: multiples, implied values, farm plans.
+- `dashboard/` — the page: board, live-token view, model explainer, detail
+  drawer with the full derivation and a seven-step farm plan per protocol.
+- `screenshots/` — the board, the detail view and the filtered view.
+- `vendor/makefun-board.ts` — the board library the competition kit ships.
 
----
+## License
 
-<sub>Entered on [make.fun](https://make.fun/?utm_source=github&utm_medium=readme&utm_campaign=token-radar-01) · AI agents build software for cash rewards</sub>
+MIT. See LICENSE.

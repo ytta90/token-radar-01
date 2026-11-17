@@ -3,13 +3,105 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Token Radar: pre-token protocols ranked by implied value</title>
-<meta name="description" content="A radar for protocols whose token does not exist yet: every watchlist protocol ranked by an implied value, with a farm plan for each one.">
+<title>Token Radar — which pre-token protocol launches next</title>
 <link rel="stylesheet" href="app.css">
 </head>
 <body>
-<a class="skip" href="#board">Skip to the board</a>
-<main id="board" tabindex="-1" aria-busy="true"><noscript><p class="noscript">Token Radar needs JavaScript: the board is rendered from the snapshot data in data.js.</p></noscript></main>
+<header class="masthead">
+  <div class="masthead-inner">
+    <div>
+      <p class="eyebrow">Token Radar · model radar-3</p>
+      <h1>Which pre-token protocol launches next?</h1>
+      <p class="lede">Every protocol in the snapshot that still has no token, ranked by the value a
+        token would imply from the snapshot's own figures — its TVL, its category's
+        comparable multiple, its 7-day growth and its age. Nothing on this page is a
+        hand-written list of names: the same model scores every row.</p>
+    </div>
+    <dl class="stats" id="stats">
+      <div><dt>Pre-token protocols ranked</dt><dd id="stat-rows">—</dd></div>
+      <div><dt>Watchlist covered</dt><dd id="stat-watchlist">—</dd></div>
+      <div><dt>Top implied value</dt><dd id="stat-top">—</dd></div>
+      <div><dt>Board TVL</dt><dd id="stat-tvl">—</dd></div>
+      <div><dt>Snapshot date</dt><dd id="stat-date">—</dd></div>
+    </dl>
+  </div>
+</header>
+
+<main>
+  <section class="model" id="model">
+    <h2>How the value is worked out</h2>
+    <p>Implied value = TVL × category multiple × growth × maturity. The category
+      multiple is the median market-cap / TVL of the token-bearing protocols in the
+      same category, shrunk toward the global median so a thin category cannot set
+      the price alone; categories with fewer than three comparables use the global
+      median. Growth is the 7-day change, clamped to −50% … +100% and weighted
+      0.6×. Maturity rises from 0.6 for a new protocol to 1.0 at three years.
+      The implied value never exceeds three times TVL.</p>
+    <table class="multiples" id="multiples">
+      <caption>Category multiples, from this snapshot's own token-bearing protocols</caption>
+      <thead><tr><th>Category</th><th>Multiple</th><th>Comparables</th></tr></thead>
+      <tbody></tbody>
+    </table>
+    <p class="model-note">Global median multiple: <strong id="global-multiple">—</strong>, from
+      <span id="global-samples">—</span> token-bearing protocols. A row priced on the
+      global median says so in its detail view.</p>
+  </section>
+
+  <section class="controls" aria-label="Board controls">
+    <div class="tabs" role="tablist">
+      <button id="tab-board" class="tab active" role="tab" aria-selected="true">Pre-token board</button>
+      <button id="tab-live" class="tab" role="tab" aria-selected="false">Live tokens</button>
+    </div>
+    <div class="filters">
+      <label>Search <input id="q" type="search" placeholder="protocol, category or chain…" autocomplete="off"></label>
+      <label>Category <select id="category"><option value="">All categories</option></select></label>
+      <label>Chain <select id="chain"><option value="">All chains</option></select></label>
+      <label>Sort by <select id="sort">
+        <option value="implied">Implied value</option>
+        <option value="tvl">TVL</option>
+        <option value="growth">7-day change</option>
+        <option value="age">Age</option>
+        <option value="name">Name</option>
+      </select></label>
+    </div>
+    <p class="count" id="count">—</p>
+  </section>
+
+  <section id="board-view">
+    <table class="board" id="board">
+      <thead>
+        <tr><th>#</th><th>Protocol</th><th>Category</th><th>Chains</th><th class="num">TVL</th><th class="num">7d</th><th class="num">Age</th><th class="num">Implied value</th><th class="num">Multiple</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <p class="empty" id="board-empty" hidden>No protocol matches. Clear the search or the filters.</p>
+  </section>
+
+  <section id="live-view" hidden>
+    <p class="live-note">These protocols already trade. Their market caps are the market's own
+      values, not a model's — they are shown apart so the board stays a ranking of
+      protocols still waiting on a launch of their own.</p>
+    <table class="board" id="live">
+      <thead>
+        <tr><th>Protocol</th><th>Category</th><th>Chains</th><th class="num">TVL</th><th class="num">Market cap</th><th class="num">7d</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </section>
+</main>
+
+<aside class="drawer" id="drawer" aria-label="Protocol detail" hidden>
+  <button class="drawer-close" id="drawer-close" aria-label="Close detail">×</button>
+  <div id="drawer-body"></div>
+</aside>
+
+<footer>
+  <p>Source: <span id="foot-source">—</span> · Snapshot date: <span id="foot-date">—</span> ·
+    Floor: <span id="foot-floor">—</span> · Model: <span id="foot-model">—</span></p>
+  <p>Implied values are a model's estimate from a single snapshot, not a forecast of
+    what any token will be worth. Always verify a claim on the protocol's own page
+    before you send funds.</p>
+</footer>
 <script src="../data.js"></script>
 <script src="app.js"></script>
 </body>
